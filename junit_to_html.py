@@ -225,11 +225,13 @@ class HTMLReport (object):
         head = ElementTree.Element("head")
         title = ElementTree.Element("title")
         title.text = "Test Results"
-        style = ElementTree.Element("style")
-        style.text = self._CSS_STRING
+        style = ElementTree.Element("link")
+        style.set("rel", "stylesheet")
+        style.set("href", self._CSS_FILE)
         script = ElementTree.Element("script")
         script.set("type", "text/javascript")
-        script.text = self._JS_STRING
+        script.set("src", self._JS_FILE)
+        script.text = " "
         # </head>
         # <body>
         body = ElementTree.Element("body")
@@ -259,77 +261,9 @@ class HTMLReport (object):
         with open(targetFile, "w") as f:
             f.write(html)
 
-    _CSS_STRING = """
-    body {
-        font-family: "Helvetica", sans-serif;
-    }
+    _CSS_FILE = "stylesheet.css"
 
-    table {
-        border-collapse: collapse;
-    }
-
-    td {
-        border: solid;
-        border-width: thin;
-        background: #fff;
-        padding: 0.25em;
-        white-space: pre-line;
-    }
-
-    tr.table_header td{
-       font-weight: bold;
-       background: #fa4;
-    }
-
-    div.feature {
-        margin-top: 1em;
-        margin-bottom: 1em;
-        padding: 0.25em;
-        /* background: #bcf; */
-    }
-
-    div#summary {
-        margin-top: 0.5em;
-        margin-bottom: 0.5em;
-        padding: 0.25em;
-        border: solid;
-        border-color: #921;
-        /* background: #ff9; */
-    }
-    """
-
-    _JS_STRING = """
-    window.onload = function() {
-        cells = document.querySelectorAll("div.feature td");
-        colorize(cells);
-        updateStepsFont(cells);
-    }
-
-    function colorize(cells) {
-        var i = 0;
-        while (i != cells.length) {
-            if (cells[i].innerHTML == "failed") {
-                cells[i].setAttribute("style", "background-color:#faa");
-            }
-            else if (cells[i].innerHTML == "passed") {
-                cells[i].setAttribute("style", "background-color:#afa");
-            }
-            i++;
-        }
-    }
-
-    function updateStepsFont(cells) {
-      var i = 0;
-        while (i != cells.length) {
-            if (cells[i].nextElementSibling == null) {
-                if (cells[i].parentElement.getAttribute("class") != "table_header") {
-                    cells[i].setAttribute("style", "font-family: monospace");
-                }
-            }
-            i++;
-        }
-    }
-    """
+    _JS_FILE = "utils.js"
 
 
 def createHtmlSummary(junitDir, targetFile):

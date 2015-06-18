@@ -1,0 +1,36 @@
+body {
+    font-family: "Helvetica", sans-serif;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+td {
+    border: solid;
+    border-width: thin;
+    background: #fff;
+    padding: 0.25em;
+    white-space: pre-line;
+}
+
+tr.table_header td{
+   font-weight: bold;
+   background: #fa4;
+}
+
+div.feature {
+    margin-top: 1em;
+    margin-bottom: 1em;
+    padding: 0.25em;
+    /* background: #bcf; */
+}
+
+div#summary {
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+    padding: 0.25em;
+    border: solid;
+    border-color: #921;
+    /* background: #ff9; */
+}
