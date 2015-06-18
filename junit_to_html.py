@@ -47,7 +47,7 @@ def _createSummaryTable():
     table = ElementTree.Element("table")
     header = ElementTree.Element("tr")
     header.set("class", "table_header")
-    headers = ["Feature",
+    headers = ["Test Suite",
                "Tests Executed",
                "Failures",
                "Errors",
@@ -142,9 +142,9 @@ def _createTestsuiteTable(junitFile):
     headers = ["Test Case",
                "Status",
                "Time (sec)",
-               "Message",
-               "Fail Type",
-               "Steps"]
+               "Failure/Error Type",
+               "Message", ]
+               # "Steps"]
     for h in headers:
         cell = ElementTree.Element("td")
         cell.text = h
@@ -167,14 +167,15 @@ def _createTestsuiteTable(junitFile):
             elif status == "failed":
                 name = test.get("name")
                 time = test.get("time")
-                err_type = test.get("type")
-                message = test.get("message")
+                err_type = test.find("error").get("type")
+                message = test.find("error").text
+                # message = test.get("message")
                 system_out = test.find("system-out").text
             elif status == "error":
                 name = test.get("name")
                 time = test.get("time")
                 err_type = test.find("error").get("type")
-                message = ""  # test.find("error").text
+                message = test.find("error").text
                 system_out = test.find("system-out").text
             else:
                 name = ""
@@ -188,8 +189,8 @@ def _createTestsuiteTable(junitFile):
                      status,
                      time,
                      err_type,
-                     message,
-                     system_out]
+                     message, ]
+                     # system_out]
             for c in cells:
                 cell = ElementTree.Element("td")
                 cell.text = c
@@ -274,5 +275,5 @@ def writeHtmlFile(junitDir, targetFile, css=None, js=None):
         f.write(html)
 
 
-if __name__ == "__main__":
-    writeHtmlFile("./", "./index.html")
+# if __name__ == "__main__":
+#     writeHtmlFile("./", "./index.html")
