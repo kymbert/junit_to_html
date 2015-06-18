@@ -2,7 +2,7 @@
 Python module to create an HTML summary page from junit XML reports.
 
 ## Usage
-
+Usage notes are forthcoming.
 
 ## Details
 
@@ -20,8 +20,8 @@ Create an HTML string literal.
 
 This function builds an HTML string for writing to a file. It requires that the private `_junitFiles`
 variable has been populated. The HTML string includes a summary of test results and separate tables
-for each testsuite. The string can then be written to a new file or embedded into an existing HTML
-file.
+for each testsuite. The string can then be written to a new file ~~or embedded into an existing HTML
+file~~.
 
 #### writeHtmlFile(junitDir, targetFile, css=None, js=None)
 Write an HTML report to a specified file.
@@ -54,6 +54,7 @@ Returns a div element containing the summary table as below.
         <tr>
             <!-- testsuite[0] results -->
         </tr>
+        ...
         <tr>
             <!-- testsuite[n] results -->
         </tr>
@@ -81,6 +82,7 @@ containing the table with results as below.
         <tr>
             <!-- testcase[0] results -->
         </tr>
+        ...
         <tr>
             <!-- testcase[n] results -->
         </tr>
