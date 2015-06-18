@@ -2,9 +2,9 @@
 Python module to create an HTML summary page from junit XML reports.
 
 ## Summary
-The **junit_to_html** module will create an HTML report page based on junit test results. This makes
-reviewing a single test run fast and easy while retaining the junit XML files for more detailed
-investigations.
+The **junit_to_html** module will create a static HTML report page based on junit test results. This
+makes reviewing single test runs fast and easy while retaining the junit XML files for detailed
+investigations of test failures.
 
 At the top of the page is a Summary section listing overall results of each test suite executed.
 
@@ -42,7 +42,7 @@ variable has been populated. The HTML string includes a summary of test results 
 for each testsuite. The string can then be written to a new file ~~or embedded into an existing HTML
 file~~.
 
-#### writeHtmlFile(junitDir, targetFile, css=None, js=None)
+#### writeHtmlFile( junitDir , targetFile , css=None , js=None )
 Write an HTML report to a specified file.
 
 Arguments:
@@ -58,9 +58,9 @@ List of junit XML files to process. Empty until `_getJunitFiles` is called.
 #### _createSummaryTable()
 Create the summary of the test run.
 
-Scans the current working directory for all XML files (by checking the file
-extension). Uses the `<testsuite>` element of the XML file to get information
-about the feature results and appends to a table.
+Scans the current working directory for all XML files (by checking the file extension). Uses the
+`<testsuite>` element of the XML file to get information about the feature results and appends to
+a table.
 
 Returns a div element containing the summary table as below.
 ```html
@@ -75,12 +75,11 @@ Returns a div element containing the summary table as below.
 </div>
 ```
 
-#### _createTestsuiteTable(junitFile)
+#### _createTestsuiteTable( junitFile )
 Create a table of test case results for a feature file.
 
-Iterates through `<testcase>` elements and creates a table of results
-including Test Case (name), Status, Time, Type (error type), Message
-(error message), and System Out (the steps).
+Iterates through `<testcase>` elements and creates a table of results including Test Case (name),
+Status, Time, Type (error type), Message (error message), and System Out (the steps).
 
 Arguments:
 * `junitFile (str)` File path to junit file containing test cases to display results.
@@ -98,7 +97,7 @@ Returns a div containing the table with results as below.
 </div>
 ```
 
-#### _getJunitFiles(junitDir)
+#### _getJunitFiles( junitDir )
 Populate `_junitFiles` with *.xml files.
 
 Iterates through all files found within the `junitDir`, appends any file with the extension ".xml"
