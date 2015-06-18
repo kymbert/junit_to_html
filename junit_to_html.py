@@ -1,32 +1,24 @@
 # -*- coding: utf-8 -*-
 #!usr/bin/python
-"""Create a summary html page to display junit test results.
-
-Attributes:
-    _junitFiles (list): List of junit XML files to process. Empty until `_getJunitFiles` is called.
-    cssFile (str): Stylesheet for the HTML report. Defaults to "stylesheet.css".
-    jsFile (str): JavaScript file for the HTML report. Defaults to "utils.js".
-
-Functions:
-    _createSummaryTable()
-    _createTestsuiteTable(junitFile)
-    _getJunitFiles(junitDir)
-    createHtmlString(junitDir): Create an HTML string literal for reporting.
-    writeHtmlFile(junitDir, targetFile): Write an HTML report to specified file.
-"""
+"""Create a summary html page to display junit test results."""
 import os
 from xml.etree import ElementTree
 
 _junitFiles = []
+"""List of junit XML files to process. Empty until `_getJunitFiles` is called."""
+
 cssFile = "stylesheet.css"
+"""Stylesheet for the HTML report. Defaults to "stylesheet.css"."""
+
 jsFile = "utils.js"
+"""JavaScript file for the HTML report. Defaults to "utils.js"."""
 
 
 def _createSummaryTable():
     """Create the summary of the test run.
 
-    Scans the current working directory for all xml files (by checking the file
-    extension). Uses the `<testsuite>` element of the xml file to get information
+    Scans the current working directory for all XML files (by checking the file
+    extension). Uses the `<testsuite>` element of the XML file to get information
     about the feature results and appends to a table.
 
     Returns:
@@ -225,7 +217,7 @@ def createHtmlString():
     """Create an HTML string literal for reporting.
 
     Builds an HTML string for writing to a file. This includes a summary of
-    test results and separate tables for each feature (junit xml file).
+    test results and separate tables for each testsuite (junit XML file).
 
     Returns:
         string: Serialized representation of the HTML.
@@ -235,13 +227,13 @@ def createHtmlString():
     head = ElementTree.Element("head")
     title = ElementTree.Element("title")
     title.text = "Test Results"
-    style = ElementTree.Element("link")
-    style.set("rel", "stylesheet")
-    style.set("href", cssFile)
-    script = ElementTree.Element("script")
-    script.set("type", "text/javascript")
-    script.set("src", jsFile)
-    script.text = " "
+    with open(cssFile) as f:
+        style = ElementTree.Element("style")
+        style.text = f.read()
+    with open(jsFile) as f:
+        script = ElementTree.Element("script")
+        script.set("type", "text/javascript")
+        script.text = f.read()
     # </head>
     # <body>
     body = ElementTree.Element("body")
@@ -261,13 +253,21 @@ def createHtmlString():
     return ElementTree.tostring(html)
 
 
-def writeHtmlFile(junitDir, targetFile):
+def writeHtmlFile(junitDir, targetFile, css=None, js=None):
     """Write an HTML report to specified file.
 
     Args:
-        junitDir (str): Dirctory containing junit xml files to process.
+        junitDir (str): Directory containing junit XML files to process.
         targetFile (str): File to write the HTML report.
+        css (Optional [str]): Override default CSS file.
+        js (Optional [str]): Override default JavaScript file.
     """
+    global cssFile, jsFile
+    if css is not None:
+        cssFile = css
+    if js is not None:
+        jsFile = js
+
     _getJunitFiles(junitDir)
     html = createHtmlString()
     with open(targetFile, "w") as f:
