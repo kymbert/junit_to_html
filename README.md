@@ -7,15 +7,15 @@ Python module to create an HTML summary page from junit XML reports.
 ## Details
 
 ### Public variables and functions
-#### `cssFile`
+#### cssFile
 File path to stylesheet for the HTML report. Defaults to "stylesheet.css". The `cssFile` variable
 can be overridden to use any stylesheet.
 
-#### `jsFile`
+#### jsFile
 File path to JavaScript file for the HTML report. Defaults to "utils.js". Like `cssFile`, the
 `jsFile` variable can be overridden to use any JavaScript file.
 
-#### `createHtmlString()`
+#### createHtmlString()
 Create an HTML string literal.
 
 This function builds an HTML string for writing to a file. It requires that the private `_junitFiles`
@@ -23,7 +23,7 @@ variable has been populated. The HTML string includes a summary of test results 
 for each testsuite. The string can then be written to a new file or embedded into an existing HTML
 file.
 
-#### `writeHtmlFile(junitDir, targetFile, css=None, js=None)`
+#### writeHtmlFile(junitDir, targetFile, css=None, js=None)
 Write an HTML report to a specified file.
 
 Arguments:
@@ -33,10 +33,10 @@ Arguments:
 * `js (Optional [str])` Override default JavaScript file.
 
 ### Private varaiables and functions
-#### `_junitFiles`
+#### _junitFiles
 List of junit XML files to process. Empty until `_getJunitFiles` is called.
 
-#### `_createSummaryTable()`
+#### _createSummaryTable()
 Create the summary of the test run.
 
 Scans the current working directory for all XML files (by checking the file
@@ -61,7 +61,7 @@ Returns a div element containing the summary table as below.
 </div>
 ```
 
-#### `_createTestsuiteTable(junitFile)`
+#### _createTestsuiteTable(junitFile)
 Create a table of test case results for a feature file.
 
 Iterates through `<testcase>` elements and creates a table of results
@@ -88,7 +88,7 @@ containing the table with results as below.
 </div>
 ```
 
-#### `_getJunitFiles(junitDir)`
+#### _getJunitFiles(junitDir)
 Populate `_junitFiles` with *.xml files.
 
 Iterates through all files found within the `junitDir`, appends any file with the extension ".xml"
