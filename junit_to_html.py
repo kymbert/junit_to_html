@@ -258,7 +258,7 @@ def writeHtmlFile(junitDir, targetFile, css=None, js=None):
 
     Args:
         junitDir (str): Directory containing junit XML files to process.
-        targetFile (str): File to write the HTML report.
+        targetFile (str): New file to write the HTML report.
         css (Optional [str]): Override default CSS file.
         js (Optional [str]): Override default JavaScript file.
     """
