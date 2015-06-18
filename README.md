@@ -48,16 +48,10 @@ Returns a div element containing the summary table as below.
 <div id="summary">
     <h1>Summary</h1>
     <table>
-        <tr class="table-header">
-            <!-- headers -->
-        </tr>
-        <tr>
-            <!-- testsuite[0] results -->
-        </tr>
+        <tr class="table-header"><!-- headers --></tr>
+        <tr><!-- testsuite[0] results --></tr>
         ...
-        <tr>
-            <!-- testsuite[n] results -->
-        </tr>
+        <tr><!-- testsuite[n] results --></tr>
     </table>
 </div>
 ```
@@ -76,16 +70,10 @@ containing the table with results as below.
 <div class="feature">
     <h2>suiteName</h2>
     <table>
-        <tr class="table-header">
-            <!-- headers -->
-        </tr>
-        <tr>
-            <!-- testcase[0] results -->
-        </tr>
+        <tr class="table-header"><!-- headers --></tr>
+        <tr><!-- testcase[0] results --></tr>
         ...
-        <tr>
-            <!-- testcase[n] results -->
-        </tr>
+        <tr><!-- testcase[n] results --></tr>
     </table>
 </div>
 ```
