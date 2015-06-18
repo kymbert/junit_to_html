@@ -1,6 +1,25 @@
 # junit_to_html
 Python module to create an HTML summary page from junit XML reports.
 
+## Summary
+The **junit_to_html** module will create an HTML report page based on junit test results. This makes
+reviewing a single test run fast and easy while retaining the junit XML files for more detailed
+investigations.
+
+At the top of the page is a Summary section listing overall results of each test suite executed.
+
+| Test Suite    | Tests Executed    | Failures  | Errors    | Percent Passing   |
+| ------------- | ----------------- | --------- | --------- | ----------------- |
+| Example Suite | 10                | 2         | 1         | 70%               |
+
+For each test suite, an additional table is added to the document detailing the individual results
+of each test case.
+
+| Test Case     | Status            | Time (sec)    | Message           |
+| ------------- | ----------------- | ------------- | ----------------- |
+| Test Case 1   | passed            | 12.9          |                   |
+| Test Case 2   | failed            | 30.1          | Element not found |
+
 ## Usage
 Usage notes are forthcoming.
 
@@ -64,8 +83,9 @@ including Test Case (name), Status, Time, Type (error type), Message
 (error message), and System Out (the steps).
 
 Arguments:
-* `junitFile (str)` File path to junit file containing test cases to display results. Returns a div
-containing the table with results as below.
+* `junitFile (str)` File path to junit file containing test cases to display results.
+
+Returns a div containing the table with results as below.
 ```html
 <div class="feature">
     <h2>suiteName</h2>
