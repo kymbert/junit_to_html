@@ -71,25 +71,27 @@ def _createSummaryTable():
         numErr = suite.get("errors")
         numSkip = suite.get("skipped")
         numExec = str(int(numTest) - int(numSkip))
+        if numSkip == numTest:
+            pass
+        else:
+            try:
+                percentPass = 100 * \
+                    (float(numTest) - float(numFail) - float(numErr) - float(numSkip)) \
+                    / float(numExec)
+            except:
+                percentPass = "N/A"
 
-        try:
-            percentPass = 100 * \
-                (float(numTest) - float(numFail) - float(numErr) - float(numSkip)) \
-                / float(numExec)
-        except:
-            percentPass = "N/A"
-
-        row = ElementTree.Element("tr")
-        cells = [name,
-                 numExec,
-                 numFail,
-                 numErr,
-                 str(percentPass) + "%"]
-        for c in cells:
-            cell = ElementTree.Element("td")
-            cell.text = c
-            row.append(cell)
-        table.append(row)
+            row = ElementTree.Element("tr")
+            cells = [name,
+                     numExec,
+                     numFail,
+                     numErr,
+                     str(percentPass) + "%"]
+            for c in cells:
+                cell = ElementTree.Element("td")
+                cell.text = c
+                row.append(cell)
+            table.append(row)
 
     summary.append(h1)
     summary.append(table)
@@ -125,7 +127,11 @@ def _createTestsuiteTable(junitFile):
     with open(junitFile) as f:
         doc = ElementTree.parse(f)
     testsuite = doc.iter("testsuite")
-    suiteName = next(testsuite).get("name")
+    suite = next(testsuite)
+    suiteName = suite.get("name")
+
+    if suite.get("tests") == suite.get("skipped"):
+        return ElementTree.Element("div")
 
     div = ElementTree.Element("div")
     div.set("class", "feature")

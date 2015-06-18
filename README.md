@@ -15,7 +15,7 @@ At the top of the page is a Summary section listing overall results of each test
 For each test suite, an additional table is added to the document detailing the individual results
 of each test case.
 
-| Test Case     | Status            | Time (sec)    | Failure/Error type    | Message               |
+| Test Case     | Status            | Time (sec)    | Failure/Error Type    | Message               |
 | ------------- | ----------------- | ------------- | --------------------- | --------------------- |
 | Test Case 1   | passed            | 12.9          |                       |                       |
 | Test Case 2   | failed            | 30.1          | TimoutException       | Element not found.    |
