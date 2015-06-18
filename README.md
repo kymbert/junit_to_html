@@ -2,7 +2,8 @@
 Python module to create an HTML summary page from junit XML reports.
 
 ### FUNCTIONS
-*createHtmlString*
+**createHtmlString**
+```
     createHtmlString()
         Create an HTML string literal for reporting.
 
@@ -11,8 +12,9 @@ Python module to create an HTML summary page from junit XML reports.
 
         Returns:
             string: Serialized representation of the HTML.
-
-*writeHtmlFile*
+```
+**writeHtmlFile**
+```
     writeHtmlFile(junitDir, targetFile, css=None, js=None)
         Write an HTML report to specified file.
 
@@ -21,7 +23,7 @@ Python module to create an HTML summary page from junit XML reports.
             targetFile (str): File to write the HTML report.
             css (Optional [str]): Override default CSS file.
             js (Optional [str]): Override default JavaScript file.
-
+```
 ### DATA
     cssFile = 'stylesheet.css'
     jsFile = 'utils.js'
