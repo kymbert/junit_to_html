@@ -3,6 +3,7 @@ Python module to create an HTML summary page from junit XML reports.
 
 ### FUNCTIONS
 createHtmlString()
+
     Create an HTML string literal for reporting.
 
     Builds an HTML string for writing to a file. This includes a summary of
@@ -12,6 +13,7 @@ createHtmlString()
         string: Serialized representation of the HTML.
 
 writeHtmlFile(junitDir, targetFile, css=None, js=None)
+
     Write an HTML report to specified file.
 
     Args:
