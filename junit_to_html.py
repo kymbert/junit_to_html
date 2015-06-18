@@ -23,7 +23,7 @@ def _createSummaryTable():
 
     Returns:
         ElementTree.Element: A div element containing the summary table as below.
-            `<div id="summary">
+            <div id="summary">
                 <h1>Summary</h1>
                 <table>
                     <tr class="table-header">
@@ -36,7 +36,7 @@ def _createSummaryTable():
                         <td>(testsuite[n] results) ... </td>
                     </tr>
                 </table>
-            </div>`
+            </div>
     """
     summary = ElementTree.Element("div")
     summary.set("id", "summary")
@@ -107,7 +107,7 @@ def _createTestsuiteTable(junitFile):
         junitFile (file): junit file containing test cases to display results.
     Returns:
         ElementTree.Element: div containing the table with results as below.
-        `<div class="feature">
+        <div class="feature">
             <h2>suiteName</h2>
             <table>
                 <tr class="table-header">
@@ -120,7 +120,7 @@ def _createTestsuiteTable(junitFile):
                     <td>(testcase[n] results) ... </td>
                 </tr>
             </table>
-        </div>`
+        </div>
     """
     with open(junitFile) as f:
         doc = ElementTree.parse(f)
