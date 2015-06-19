@@ -187,7 +187,7 @@ def _getJunitFiles(junitDir):
 
     for f in os.listdir(junitDir):
         if f.endswith(".xml"):
-            junitFile = os.path.joing(junitDir, f)
+            junitFile = os.path.join(junitDir, f)
             _junitFiles.append(junitFile)
         else:
             pass
