@@ -7,10 +7,10 @@ from xml.etree import ElementTree
 _junitFiles = []
 """List of junit XML files to process. Empty until `_getJunitFiles` is called."""
 
-cssFile = open(os.path.abspath(__file__) + "\\..\\stylesheet.css")
+cssFile = open(os.path.join(os.path.abspath(__file__), "..", "stylesheet.css"))
 """Stylesheet for the HTML report. Defaults to "stylesheet.css"."""
 
-jsFile = open(os.path.abspath(__file__) + "\\..\\utils.js")
+jsFile = open(os.path.join(os.path.abspath(__file__), "..", "utils.js"))
 """JavaScript file for the HTML report. Defaults to "utils.js"."""
 
 
@@ -140,7 +140,6 @@ def _createTestsuiteTable(junitFile):
                     time = test.get("time")
                     err_type = "n/a"
                     message = "n/a"
-                    # system_out = test.find("system-out").text
                     # system_out = ""
                 elif status == "failed" and test.find("failure") is not None:
                     name = test.get("name")
@@ -188,7 +187,7 @@ def _getJunitFiles(junitDir):
 
     for f in os.listdir(junitDir):
         if f.endswith(".xml"):
-            junitFile = "{0}\\{1}".format(junitDir, f)  # TODO: cross-platform
+            junitFile = os.path.joing(junitDir, f)
             _junitFiles.append(junitFile)
         else:
             pass
