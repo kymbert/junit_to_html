@@ -55,6 +55,8 @@ def _createSummaryTable():
             numFail = suite.get("failures")
             numErr = suite.get("errors")
             numSkip = suite.get("skipped")
+            if numSkip is None:
+                numSkip = 0
             numExec = str(int(numTest) - int(numSkip))
             if numSkip == numTest:
                 pass
@@ -121,8 +123,7 @@ def _createTestsuiteTable(junitFile):
                    "Status",
                    "Time (sec)",
                    "Failure/Error Type",
-                   "Message", ]
-                   # "Steps"]
+                   "Message"]
         for h in headers:
             cell = ElementTree.Element("td")
             cell.text = h
@@ -131,49 +132,38 @@ def _createTestsuiteTable(junitFile):
 
         testCases = doc.iter("testcase")
         for test in testCases:
-            status = test.get("status")
-            if status == "skipped":
-                pass
-            else:
-                if status == "passed":
-                    name = test.get("name")
-                    time = test.get("time")
-                    err_type = "n/a"
-                    message = ""
-                    # system_out = ""
-                elif status == "failed" and test.find("failure") is not None:
-                    name = test.get("name")
-                    time = test.get("time")
-                    err_type = test.find("failure").get("type")
-                    message = test.find("failure").text
-                    # message = test.get("message")
-                    # system_out = test.find("system-out").text
-                elif status == "failed" and test.find("error") is not None:
-                    status = "error"
-                    name = test.get("name")
-                    time = test.get("time")
-                    err_type = test.find("error").get("type")
-                    message = test.find("error").text
-                    # system_out = test.find("system-out").text
-                else:
-                    name = ""
-                    time = ""
-                    err_type = ""
-                    message = ""
-                    # system_out = ""
+            if test.find("failure") is not None:  # test failed
+                status = "failed"
+                name = test.get("name")
+                time = test.get("time")
+                err_type = test.find("failure").get("type")
+                message = test.find("failure").text
+            elif test.find("error") is not None:  # test errored
+                status = "error"
+                name = test.get("name")
+                time = test.get("time")
+                err_type = test.find("error").get("type")
+                message = test.find("error").text
+            elif test.find("skipped") is not None:  # test skipped
+                continue
+            else:  # test passed
+                status = "passed"
+                name = test.get("name")
+                time = test.get("time")
+                err_type = "n/a"
+                message = ""
+            row = ElementTree.Element("tr")
+            cells = [name,
+                     status,
+                     time,
+                     err_type,
+                     message]
 
-                row = ElementTree.Element("tr")
-                cells = [name,
-                         status,
-                         time,
-                         err_type,
-                         message, ]
-                         # system_out]
-                for c in cells:
-                    cell = ElementTree.Element("td")
-                    cell.text = c
-                    row.append(cell)
-                table.append(row)
+            for c in cells:
+                cell = ElementTree.Element("td")
+                cell.text = c
+                row.append(cell)
+            table.append(row)
 
         div.append(anchor)
         div.append(h2)
