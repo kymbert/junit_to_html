@@ -7,10 +7,10 @@ from xml.etree import ElementTree
 _junitFiles = []
 """List of junit XML files to process. Empty until `_getJunitFiles` is called."""
 
-cssFile = "stylesheet.css"
+cssFile = open(os.path.abspath(__file__) + "\\..\\stylesheet.css")
 """Stylesheet for the HTML report. Defaults to "stylesheet.css"."""
 
-jsFile = "utils.js"
+jsFile = open(os.path.abspath(__file__) + "\\..\\utils.js")
 """JavaScript file for the HTML report. Defaults to "utils.js"."""
 
 
@@ -22,21 +22,7 @@ def _createSummaryTable():
     about the feature results and appends to a table.
 
     Returns:
-        ElementTree.Element: A div element containing the summary table as below.
-            <div id="summary">
-                <h1>Summary</h1>
-                <table>
-                    <tr class="table-header">
-                        <td>(headers) ... </td>
-                    </tr>
-                    <tr>
-                        <td>(testsuite[0] results) ... </td>
-                    </tr>
-                    <tr>
-                        <td>(testsuite[n] results) ... </td>
-                    </tr>
-                </table>
-            </div>
+        ElementTree.Element: A div element containing the summary table.
     """
     summary = ElementTree.Element("div")
     summary.set("id", "summary")
@@ -62,36 +48,35 @@ def _createSummaryTable():
         with open(f) as g:
             doc = ElementTree.parse(g)
 
-        testsuite = doc.iter("testsuite")
-        suite = next(testsuite)
+        testsuites = doc.iter("testsuite")
+        for suite in testsuites:
+            name = suite.get("name")
+            numTest = suite.get("tests")
+            numFail = suite.get("failures")
+            numErr = suite.get("errors")
+            numSkip = suite.get("skipped")
+            numExec = str(int(numTest) - int(numSkip))
+            if numSkip == numTest:
+                pass
+            else:
+                try:
+                    percentPass = 100 * \
+                        (float(numTest) - float(numFail) - float(numErr) - float(numSkip)) \
+                        / float(numExec)
+                except:
+                    percentPass = "N/A"
 
-        name = suite.get("name")
-        numTest = suite.get("tests")
-        numFail = suite.get("failures")
-        numErr = suite.get("errors")
-        numSkip = suite.get("skipped")
-        numExec = str(int(numTest) - int(numSkip))
-        if numSkip == numTest:
-            pass
-        else:
-            try:
-                percentPass = 100 * \
-                    (float(numTest) - float(numFail) - float(numErr) - float(numSkip)) \
-                    / float(numExec)
-            except:
-                percentPass = "N/A"
-
-            row = ElementTree.Element("tr")
-            cells = [name,
-                     numExec,
-                     numFail,
-                     numErr,
-                     str(percentPass) + "%"]
-            for c in cells:
-                cell = ElementTree.Element("td")
-                cell.text = c
-                row.append(cell)
-            table.append(row)
+                row = ElementTree.Element("tr")
+                cells = [name,
+                         numExec,
+                         numFail,
+                         numErr,
+                         str(percentPass) + "%"]
+                for c in cells:
+                    cell = ElementTree.Element("td")
+                    cell.text = c
+                    row.append(cell)
+                table.append(row)
 
     summary.append(h1)
     summary.append(table)
@@ -108,105 +93,94 @@ def _createTestsuiteTable(junitFile):
     Args:
         junitFile (file): junit file containing test cases to display results.
     Returns:
-        ElementTree.Element: div containing the table with results as below.
-        <div class="feature">
-            <h2>suiteName</h2>
-            <table>
-                <tr class="table-header">
-                    <td>(headers) ... </td>
-                </tr>
-                <tr>
-                    <td>(testcase[0] results) ... </td>
-                </tr>
-                <tr>
-                    <td>(testcase[n] results) ... </td>
-                </tr>
-            </table>
-        </div>
+        ElementTree.Element: div containing the table with results.
     """
+    parentDiv = ElementTree.Element("div")
     with open(junitFile) as f:
         doc = ElementTree.parse(f)
-    testsuite = doc.iter("testsuite")
-    suite = next(testsuite)
-    suiteName = suite.get("name")
+    testsuites = doc.iter("testsuite")
+    for suite in testsuites:
+        suiteName = suite.get("name")
 
-    if suite.get("tests") == suite.get("skipped"):
-        return ElementTree.Element("div")
+        if suite.get("tests") == suite.get("skipped"):
+            return ElementTree.Element("div")
 
-    div = ElementTree.Element("div")
-    div.set("class", "feature")
+        div = ElementTree.Element("div")
+        div.set("class", "feature")
 
-    anchor = ElementTree.Element("a")
-    anchor.set("id", suiteName)
+        anchor = ElementTree.Element("a")
+        anchor.set("id", suiteName)
 
-    h2 = ElementTree.Element("h2")
-    h2.text = suiteName
+        h2 = ElementTree.Element("h2")
+        h2.text = suiteName
 
-    table = ElementTree.Element("table")
-    header = ElementTree.Element("tr")
-    header.set("class", "table_header")
-    headers = ["Test Case",
-               "Status",
-               "Time (sec)",
-               "Failure/Error Type",
-               "Message", ]
-               # "Steps"]
-    for h in headers:
-        cell = ElementTree.Element("td")
-        cell.text = h
-        header.append(cell)
-    table.append(header)
+        table = ElementTree.Element("table")
+        header = ElementTree.Element("tr")
+        header.set("class", "table_header")
+        headers = ["Test Case",
+                   "Status",
+                   "Time (sec)",
+                   "Failure/Error Type",
+                   "Message", ]
+                   # "Steps"]
+        for h in headers:
+            cell = ElementTree.Element("td")
+            cell.text = h
+            header.append(cell)
+        table.append(header)
 
-    testCases = doc.iter("testcase")
-    for test in testCases:
-        status = test.get("status")
-        if status == "skipped":
-            pass
-        else:
-            if status == "passed":
-                name = test.get("name")
-                time = test.get("time")
-                err_type = ""
-                message = ""
-                # system_out = test.find("system-out").text
-                system_out = ""
-            elif status == "failed":
-                name = test.get("name")
-                time = test.get("time")
-                err_type = test.find("error").get("type")
-                message = test.find("error").text
-                # message = test.get("message")
-                system_out = test.find("system-out").text
-            elif status == "error":
-                name = test.get("name")
-                time = test.get("time")
-                err_type = test.find("error").get("type")
-                message = test.find("error").text
-                system_out = test.find("system-out").text
+        testCases = doc.iter("testcase")
+        for test in testCases:
+            status = test.get("status")
+            if status == "skipped":
+                pass
             else:
-                name = ""
-                time = ""
-                err_type = ""
-                message = ""
-                system_out = ""
+                if status == "passed":
+                    name = test.get("name")
+                    time = test.get("time")
+                    err_type = "n/a"
+                    message = "n/a"
+                    # system_out = test.find("system-out").text
+                    # system_out = ""
+                elif status == "failed" and test.find("failure") is not None:
+                    name = test.get("name")
+                    time = test.get("time")
+                    err_type = test.find("failure").get("type")
+                    message = test.find("failure").text
+                    # message = test.get("message")
+                    # system_out = test.find("system-out").text
+                elif status == "failed" and test.find("error") is not None:
+                    status = "error"
+                    name = test.get("name")
+                    time = test.get("time")
+                    err_type = test.find("error").get("type")
+                    message = test.find("error").text
+                    # system_out = test.find("system-out").text
+                else:
+                    name = ""
+                    time = ""
+                    err_type = ""
+                    message = ""
+                    # system_out = ""
 
-            row = ElementTree.Element("tr")
-            cells = [name,
-                     status,
-                     time,
-                     err_type,
-                     message, ]
-                     # system_out]
-            for c in cells:
-                cell = ElementTree.Element("td")
-                cell.text = c
-                row.append(cell)
-            table.append(row)
+                row = ElementTree.Element("tr")
+                cells = [name,
+                         status,
+                         time,
+                         err_type,
+                         message, ]
+                         # system_out]
+                for c in cells:
+                    cell = ElementTree.Element("td")
+                    cell.text = c
+                    row.append(cell)
+                table.append(row)
 
-    div.append(anchor)
-    div.append(h2)
-    div.append(table)
-    return div
+        div.append(anchor)
+        div.append(h2)
+        div.append(table)
+        parentDiv.append(div)
+    return parentDiv
 
 
 def _getJunitFiles(junitDir):
@@ -234,13 +208,18 @@ def createHtmlString():
     head = ElementTree.Element("head")
     title = ElementTree.Element("title")
     title.text = "Test Results"
-    with open(cssFile) as f:
-        style = ElementTree.Element("style")
-        style.text = f.read()
-    with open(jsFile) as f:
-        script = ElementTree.Element("script")
-        script.set("type", "text/javascript")
-        script.text = f.read()
+    # with open(cssFile) as f:
+    #     style = ElementTree.Element("style")
+    #     style.text = f.read()
+    # with open(jsFile) as f:
+    #     script = ElementTree.Element("script")
+    #     script.set("type", "text/javascript")
+    #     script.text = f.read()
+    style = ElementTree.Element("style")
+    style.text = cssFile.read()
+    script = ElementTree.Element("script")
+    script.set("type", "text/javascript")
+    script.text = jsFile.read()
     # </head>
     # <body>
     body = ElementTree.Element("body")
@@ -279,7 +258,3 @@ def writeHtmlFile(junitDir, targetFile, css=None, js=None):
     html = createHtmlString()
     with open(targetFile, "w") as f:
         f.write(html)
-
-
-# if __name__ == "__main__":
-#     writeHtmlFile("./", "./index.html")
