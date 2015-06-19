@@ -139,7 +139,7 @@ def _createTestsuiteTable(junitFile):
                     name = test.get("name")
                     time = test.get("time")
                     err_type = "n/a"
-                    message = "n/a"
+                    message = ""
                     # system_out = ""
                 elif status == "failed" and test.find("failure") is not None:
                     name = test.get("name")
